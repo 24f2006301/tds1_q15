@@ -183,9 +183,6 @@ def answer_question(question, orders, rates):
     elif asks_paid:
         rows = [r for r in rows if str(r.get("status", "")).lower() == "paid"]
 
-    if currency:
-        rows = [r for r in rows if str(r.get("currency", "")).upper() == currency]
-
     # Ranking questions: return the best matching entity with a metric.
     if any(w in ql for w in ("top", "highest", "most", "best", "largest", "which product", "which region")):
         metric_rows = [r for r in rows if str(r.get("status", "")).lower() == "paid"] if not asks_refund and not asks_void else rows
@@ -199,7 +196,7 @@ def answer_question(question, orders, rates):
             totals[key] = totals.get(key, 0.0) + value
         winner = max(totals, key=totals.get)
         metric = "USD revenue" if ("revenue" in ql or "sales" in ql or "amount" in ql or "value" in ql) else "orders"
-        return f"{winner}: {money(totals[winner])} USD {metric}" if metric == "USD revenue" else f"{winner}: {int(totals[winner])} orders"
+        return f"{winner}: {money(totals[winner])} USD revenue" if metric == "USD revenue" else f"{winner}: {int(totals[winner])} orders"
 
     if not rows:
         return "No matching orders found."

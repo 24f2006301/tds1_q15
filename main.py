@@ -175,7 +175,7 @@ def answer_question(question, orders, rates):
     # Status selection: revenue is strictly paid orders; refunds are reported separately.
     asks_refund = any(w in ql for w in ("refund", "refunded", "refunds"))
     asks_void = "void" in ql
-    asks_paid = any(w in ql for w in ("paid", "revenue", "sales", "sold", "earning", "income"))
+    asks_paid = any(w in ql for w in ("paid", "revenue", "sales", "sold", "earn", "income"))
     if asks_refund:
         rows = [r for r in rows if str(r.get("status", "")).lower() == "refunded"]
     elif asks_void:
@@ -216,7 +216,7 @@ def answer_question(question, orders, rates):
         return str(len(rows))
 
     # Sum amounts in requested currency, or normalize to USD by default.
-    if any(w in ql for w in ("revenue", "sales", "total", "sum", "amount", "value", "refund", "refunds", "how much", "earnings", "income")):
+    if any(w in ql for w in ("revenue", "sales", "total", "sum", "amount", "value", "refund", "refunds", "how much", "earn", "income")):
         if currency and currency != "USD":
             total = sum(float(r.get("amount", 0) or 0) for r in rows)
             return f"{money(total)} {currency}"
